@@ -56,14 +56,21 @@ router.patch('/:id', async (req, res, next) => {
     const reqUpdateFields = Object.keys(req.body);
     checkIfFieldsValid(reqUpdateFields, allowedUpdates, res);
     try {
-        const updatedTask = await Task.findByIdAndUpdate(req.params.id, req.body, { new: true, runValidators: true });
-        if (!updatedTask) {
+        // const updatedTask = await Task.findByIdAndUpdate(req.params.id, req.body, { new: true, runValidators: true });
+
+        const newTask = await Task.findById(req.params.id);
+
+        reqUpdateFields.forEach(updateField => newTask[updateField] = req.body[updateField]);
+
+        await newTask.save();
+
+        if (!newTask) {
             return res.status(404).json({
                 message: 'No task was found with that id!'
             })
         }
         res.status(201).json({
-            updatedTask
+            newTask
         })
     } catch ({message}) {
         res.status(400).json({

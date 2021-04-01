@@ -11,11 +11,23 @@ router.post('', async (req, res, next) => {
         res.status(201).json({
             message: 'New user created.'
         });
-    } catch (err) {
+    } catch ({message}) {
         res.status(400).json({
-            err,
-            message: err.message
+            message
+        });
+    }
+});
+
+router.post('/login', async (req, res, next) => {
+    try {
+        const user = await User.findByCredentials(req.body.email, req.body.password);
+        res.status(200).json({
+            user
         })
+    } catch ({message}) {
+        res.status(400).json({
+            message
+        });
     }
 });
 
@@ -24,11 +36,11 @@ router.get('', async (req, res, next) => {
         const users = await User.find();
         res.status(200).json({
             users: users
-        })
+        });
     } catch (err) {
         res.status(401).json({
             message: err.message
-        })
+        });
     }
 });
 
@@ -38,15 +50,15 @@ router.get('/:id', async (req, res, next) => {
         if (user) {
             return res.status(200).json({
                 user
-            })
+            });
         }
         res.status(404).json({
             message: 'No user was found for that id.'
-        })
+        });
     } catch (err) {
         res.status(401).json({
             message: err.message
-        })
+        });
     }
 });
 
@@ -57,19 +69,25 @@ router.patch('/:id', async (req, res, next) => {
     checkIfFieldsValid(reqUpdateFields, allowedUpdates, res);
 
     try {
-        const newUser = await User.findByIdAndUpdate(req.params.id, req.body, { new: true, runValidators: true });
+        // const newUser = await User.findByIdAndUpdate(req.params.id, req.body, { new: true, runValidators: true });
+        const newUser = await User.findById(req.params.id);
+
+        reqUpdateFields.forEach(updateField => newUser[updateField] = req.body[updateField]);
+
+        await newUser.save();
+
         if (!newUser) {
             return res.status(404).json({
                 message: 'No user was found with that id!'
-            })
+            });
         }
         res.status(201).json({
             newUser
-        })
+        });
     } catch ({message}) {
         res.status(400).json({
             message
-        })
+        });
     }
 });
 
@@ -80,17 +98,17 @@ router.delete('/:id', async (req, res, next) => {
         if (!deletedUser) {
             return res.status(404).json({
                 message: 'No user was found with that id!'
-            })
+            });
         }
         res.status(201).json({
             deletedUser,
             message: 'User deleted successfully.'
-        })
+        });
 
     } catch ({message}) {
         res.status(400).json({
             message
-        })
+        });
     }
 });
 
