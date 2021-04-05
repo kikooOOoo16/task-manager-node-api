@@ -1,15 +1,20 @@
 const express = require('express');
 const router = new express.Router();
+const auth = require('../middleware/middleware');
 
 const User = require('../models/user');
 const checkIfFieldsValid = require('../utils/shared');
 
+// POST signUp user
 router.post('', async (req, res, next) => {
     const user = new User(req.body);
     try {
         await user.save();
+        const token = await user.generateAuthToken();
         res.status(201).json({
-            message: 'New user created.'
+            message: 'New user created.',
+            user,
+            token
         });
     } catch ({message}) {
         res.status(400).json({
@@ -18,12 +23,15 @@ router.post('', async (req, res, next) => {
     }
 });
 
+// POST login user
 router.post('/login', async (req, res, next) => {
     try {
         const user = await User.findByCredentials(req.body.email, req.body.password);
+        const token = await user.generateAuthToken();
         res.status(200).json({
-            user
-        })
+            user,
+            token
+        });
     } catch ({message}) {
         res.status(400).json({
             message
@@ -31,29 +39,43 @@ router.post('/login', async (req, res, next) => {
     }
 });
 
-router.get('', async (req, res, next) => {
+// POST logout user
+router.post('/logout', auth, async (req, res, next) => {
     try {
-        const users = await User.find();
+        req.user.tokens = req.user.tokens.filter(
+            (token) => token.token !== req.token
+        );
+        await req.user.save();
         res.status(200).json({
-            users: users
-        });
+            message: 'User logged out!'
+        })
     } catch (err) {
-        res.status(401).json({
-            message: err.message
+        res.status(500).json({
+            message: 'User logout failed!'
         });
     }
 });
 
-router.get('/:id', async (req, res, next) => {
+// POST logout user from all sessions
+router.post('/logoutall', auth, async (req, res, next) => {
     try {
-        const user = await User.findById(req.params.id);
-        if (user) {
-            return res.status(200).json({
-                user
-            });
-        }
-        res.status(404).json({
-            message: 'No user was found for that id.'
+        req.user.tokens = [];
+        await req.user.save();
+        res.status(200).json({
+            message: 'User logged out from all sessions!'
+        });
+    } catch (err) {
+        res.status(500).json({
+            message: 'User logout failed!'
+        });
+    }
+})
+
+// GET user data
+router.get('/profile', auth, async (req, res, next) => {
+    try {
+        res.status(200).json({
+            user: req.user
         });
     } catch (err) {
         res.status(401).json({
@@ -62,27 +84,21 @@ router.get('/:id', async (req, res, next) => {
     }
 });
 
-router.patch('/:id', async (req, res, next) => {
+// PATCH single user
+router.patch('/profile', auth, async (req, res, next) => {
     const allowedUpdates = ['name', 'email', 'password', 'age'];
     const reqUpdateFields = Object.keys(req.body);
 
-    checkIfFieldsValid(reqUpdateFields, allowedUpdates, res);
 
     try {
         // const newUser = await User.findByIdAndUpdate(req.params.id, req.body, { new: true, runValidators: true });
-        const newUser = await User.findById(req.params.id);
 
-        reqUpdateFields.forEach(updateField => newUser[updateField] = req.body[updateField]);
+        await checkIfFieldsValid(reqUpdateFields, allowedUpdates, res);
+        reqUpdateFields.forEach(updateField => req.user[updateField] = req.body[updateField]);
+        await req.user.save();
 
-        await newUser.save();
-
-        if (!newUser) {
-            return res.status(404).json({
-                message: 'No user was found with that id!'
-            });
-        }
         res.status(201).json({
-            newUser
+            user: req.user
         });
     } catch ({message}) {
         res.status(400).json({
@@ -91,17 +107,12 @@ router.patch('/:id', async (req, res, next) => {
     }
 });
 
-router.delete('/:id', async (req, res, next) => {
+// DELETE single user
+router.delete('/profile', auth, async (req, res, next) => {
     try {
-        const deletedUser = await User.findByIdAndDelete(req.params.id);
-
-        if (!deletedUser) {
-            return res.status(404).json({
-                message: 'No user was found with that id!'
-            });
-        }
+        await req.user.remove();
         res.status(201).json({
-            deletedUser,
+            user: req.user,
             message: 'User deleted successfully.'
         });
 
