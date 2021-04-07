@@ -6,6 +6,7 @@ const Task = require('../models/task');
 const checkIfFieldsValid = require('../utils/shared');
 
 
+// POST single task
 router.post('', auth, async (req, res, next) => {
     const task = new Task({
         ...req.body,
@@ -26,12 +27,38 @@ router.post('', auth, async (req, res, next) => {
     }
 });
 
+// GET all tasks
+// GET /tasks?completed=true
+// GET /tasks?limit=10&skip=20
+// GET /tasks?sortBy=createdAt:desc
+
 router.get('', auth, async (req, res, next) => {
     try {
-        const tasks = await Task.find({owner: req.user._id});
-        // await req.user.populate('tasks').execPopulate();
+        const match = {}
+        const sort = {}
+
+        if (req.query.completed) {
+            match.completed = req.query.completed === 'true';
+        }
+
+        if (req.query.sortBy) {
+            const parts = req.query.sortBy.split(':');
+            sort[parts[0]] = parts[1] === 'asc'? 1 : -1;
+        }
+
+        // const tasks = await Task.find({owner: req.user._id});
+        await req.user.populate({
+            path: 'tasks',
+            match,
+            options: {
+                // if no req.query.limit mongoose ignores the limit prop
+                limit: parseInt(req.query.limit),
+                skip: parseInt(req.query.skip),
+                sort
+            }
+        }).execPopulate();
         res.status(200).json({
-            tasks
+            tasks: req.user.tasks
         })
     } catch (err) {
         res.status(401).json({
@@ -40,6 +67,7 @@ router.get('', auth, async (req, res, next) => {
     }
 });
 
+// GET single task
 router.get('/:id', auth, async (req, res, next) => {
     try {
         const task = await Task.findOne({ _id: req.params.id, owner: req.user._id });
@@ -59,6 +87,7 @@ router.get('/:id', auth, async (req, res, next) => {
     }
 });
 
+// PATCH single task
 router.patch('/:id', auth, async (req, res, next) => {
     const allowedUpdates = ['description', 'completed'];
     const reqUpdateFields = Object.keys(req.body);
@@ -89,6 +118,7 @@ router.patch('/:id', auth, async (req, res, next) => {
     }
 });
 
+// DELETE single task
 router.delete('/:id', auth, async (req, res, next) => {
     try {
         const deletedTask = await Task.findOneAndDelete({_id: req.params.id, owner: req.user._id});

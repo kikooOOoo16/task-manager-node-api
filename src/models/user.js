@@ -50,6 +50,8 @@ const userSchema = new mongoose.Schema({
             }
         }
     ]
+}, {
+    timestamps: true
 });
 
 // User doesn't actually hold any task data, this is just for mongoose to know the relationship
