@@ -1,9 +1,25 @@
 const express = require('express');
 const router = new express.Router();
+const multer = require('multer');
+const sharp = require('sharp');
 const auth = require('../middleware/middleware');
 
 const User = require('../models/user');
 const checkIfFieldsValid = require('../utils/shared');
+
+// Multer config
+const upload = multer({
+    limits: {
+        // 1.5 Mb
+        fileSize: 1500000
+    },
+    fileFilter(req, file, callback) {
+        if (!file.originalname.match(/\.(jpg|png|jpeg)$/)) {
+            callback(new Error('File must be an image.'));
+        }
+        callback(undefined, true);
+    }
+});
 
 // POST signUp user
 router.post('', async (req, res, next) => {
@@ -69,6 +85,47 @@ router.post('/logoutall', auth, async (req, res, next) => {
             message: 'User logout failed!'
         });
     }
+});
+
+// POST user profile image
+router.post('/profile/image', auth, upload.single('profileImage'), async (req, res, next) => {
+    const buffer = await sharp(req.file.buffer).resize({ width: 250, height: 250 }).png().toBuffer();
+    req.user.profileImage = buffer;
+    await req.user.save();
+    res.status(200).json({
+        message: 'File uploaded successfully'
+    });
+}, (error, req, res, next) => {
+    res.status(400).json({
+        message: `User image upload failed. ${error}`
+    })
+});
+
+// GET user profile image
+router.get('/:id/image', async (req, res, next) => {
+    try {
+        const user = await User.findById(req.params.id);
+        if (!user || !user.profileImage) {
+            res.status(404).json({
+                message: `A problem occurred when getting the user's profile image.`
+            })
+        }
+        res.set('Content-Type', 'image/png');
+        res.send(user.profileImage)
+    }catch (err) {
+        res.status(404).json({
+            message: `Profile image not found. ${err}`
+        })
+    }
+})
+
+// DELETE user profile image
+router.delete('/profile/image', auth, async (req, res, next) => {
+    req.user.profileImage = undefined;
+    await req.user.save()
+    res.status(200).json({
+        message: 'Profile image deleted.'
+    })
 })
 
 // GET user data
