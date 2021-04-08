@@ -2,7 +2,9 @@ const express = require('express');
 const router = new express.Router();
 const multer = require('multer');
 const sharp = require('sharp');
+
 const auth = require('../middleware/middleware');
+const { sendWelcomeEmail, sendCancellationEmail } = require('../emails/account');
 
 const User = require('../models/user');
 const checkIfFieldsValid = require('../utils/shared');
@@ -26,6 +28,7 @@ router.post('', async (req, res, next) => {
     const user = new User(req.body);
     try {
         await user.save();
+        sendWelcomeEmail(user.email, user.name);
         const token = await user.generateAuthToken();
         res.status(201).json({
             message: 'New user created.',
@@ -108,16 +111,16 @@ router.get('/:id/image', async (req, res, next) => {
         if (!user || !user.profileImage) {
             res.status(404).json({
                 message: `A problem occurred when getting the user's profile image.`
-            })
+            });
         }
         res.set('Content-Type', 'image/png');
         res.send(user.profileImage)
-    }catch (err) {
+    } catch (err) {
         res.status(404).json({
             message: `Profile image not found. ${err}`
         })
     }
-})
+});
 
 // DELETE user profile image
 router.delete('/profile/image', auth, async (req, res, next) => {
@@ -168,6 +171,7 @@ router.patch('/profile', auth, async (req, res, next) => {
 router.delete('/profile', auth, async (req, res, next) => {
     try {
         await req.user.remove();
+        sendCancellationEmail(req.user.email, req.user.name);
         res.status(201).json({
             user: req.user,
             message: 'User deleted successfully.'
