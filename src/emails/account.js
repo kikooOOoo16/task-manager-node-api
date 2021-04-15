@@ -6,7 +6,7 @@ const sendWelcomeEmail = (email, name) => {
     sgMail.send({
         to: email,
         from: 'kiko_bt_@hotmail.com',
-        subject: `Thank you for joining to the Task Manager API.`,
+        subject: `Thank you for joining the Task Manager API.`,
         text: `Welcome to the API, ${name}. If you have any questions feel free to send an email.`
     });
 }

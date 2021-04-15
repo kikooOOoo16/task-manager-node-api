@@ -149,10 +149,8 @@ router.patch('/profile', auth, async (req, res, next) => {
     const allowedUpdates = ['name', 'email', 'password', 'age'];
     const reqUpdateFields = Object.keys(req.body);
 
-
     try {
         // const newUser = await User.findByIdAndUpdate(req.params.id, req.body, { new: true, runValidators: true });
-
         await checkIfFieldsValid(reqUpdateFields, allowedUpdates, res);
         reqUpdateFields.forEach(updateField => req.user[updateField] = req.body[updateField]);
         await req.user.save();
