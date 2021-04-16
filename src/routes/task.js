@@ -42,8 +42,15 @@ router.get('', auth, async (req, res, next) => {
         }
 
         if (req.query.sortBy) {
-            const parts = req.query.sortBy.split(':');
-            sort[parts[0]] = parts[1] === 'asc'? 1 : -1;
+            if (Array.isArray(req.query.sortBy)) {
+                req.query.sortBy.forEach(sortQuery => {
+                    const parts = sortQuery.split(':');
+                    sort[parts[0]] = parts[1] === 'asc'? 1 : -1;
+                })
+            } else {
+                const parts = req.query.sortBy.split(':');
+                sort[parts[0]] = parts[1] === 'asc'? 1 : -1;
+            }
         }
 
         // const tasks = await Task.find({owner: req.user._id});

@@ -32,6 +32,16 @@ test('Should sign up a new user', async () => {
     expect(user.password).not.toBe('pass1234!');
 });
 
+test('Should not sign up a new user with invalid credentials', async () => {
+    await requestSt(app)
+        .post('/users')
+        .send({
+            name: 'Kristijan',
+            email: 'kristijan.pavlevski.com',
+            password: 'pass'
+        }).expect(400);
+});
+
 test('Should login existing user', async () => {
     const res = await requestSt(app)
         .post('/users/login')
@@ -115,6 +125,28 @@ test('Should update name field of user', async () => {
         .expect(201);
     const updatedUser = await User.findById(userId1);
     expect(updatedUser.name).toBe('Kiko');
+});
+
+test('Should not update name field of unauthenticated user', async () => {
+    await requestSt(app)
+        .patch('/users/profile')
+        .send({
+            name: 'Kiko',
+            age: 26
+        })
+        .expect(401);
+});
+
+test('Should not update user with invalid data', async () => {
+    await requestSt(app)
+        .patch('/users/profile')
+        .set('Authorization', `Bearer ${user1.tokens[0].token}`)
+        .send({
+            name: 'Kiko',
+            email: 'kiko.com',
+            age: 26
+        })
+        .expect(400);
 });
 
 test('Should fail user update because of invalid field', async () => {
