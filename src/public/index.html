@@ -1,0 +1,473 @@
+<!-- PROJECT LOGO -->
+<p><p align="center">
+<h2 align="center">Task Manager Node.js API</h2>
+<p align="center">
+    A simple NodeJS, Express API
+    <br/>
+    <br/>
+</p>
+</p>
+<br/></p>
+<!-- TABLE OF CONTENTS -->
+<p>
+    <details open="open">
+        <summary>Table of Contents</summary>
+        <ol>
+            <li>
+                <a href="#about-the-project">About The Project</a>
+                <ul>
+                    <li><a href="#built-with">Built With</a></li>
+                </ul>
+            </li>
+            <li>
+                <a href="#description">Description</a>
+                <ul>
+                    <li><a href="#user-routes">User routes</a></li>
+                    <li><a href="#task-routes">Task routes</a></li>
+                </ul>
+            </li>
+        </ol>
+    </details>
+    <br/></p>
+<!-- ABOUT THE PROJECT -->
+<h2 id="about-the-project">About The Project</h2>
+<p>A task manager API that can be used as a boilerplate for similarly structured APIs.
+    The features that the API provides are the following:</p>
+<ul>
+    <li>User authentication.</li>
+    <li>Email notifications for opening and closing an account.</li>
+    <li>User and task route authorization.</li>
+    <li>User and tasks CRUD operations.</li>
+    <li>Tasks pagination and sorting.</li>
+</ul>
+<h2 id="built-with">Built With</h2>
+<ul>
+    <li><a href="https://nodejs.org/en/">NodeJS</a></li>
+    <li><a href="https://expressjs.com/">ExpressJS</a></li>
+    <li><a href="https://www.mongodb.com/cloud/atlas">MongoDB</a></li>
+</ul>
+<!-- GETTING STARTED -->
+<ol>
+    <li>
+        <h2 id="description">Description</h2>
+    </li>
+</ol>
+<p>The REST API to the example app is described below.</p>
+<h3 id="user-routes">User routes</h3>
+<h3 id="user-login-request">User login request</h3>
+<p><code>POST /users/login</code></p>
+<p>  body:</p>
+<pre><code class="lang-JSON">  {
+    <span class="hljs-attr">"email"</span> : <span class="hljs-string">"user1@mail.com"</span>,
+    <span class="hljs-attr">"password"</span>: <span class="hljs-string">"123456789"</span>
+}
+</code></pre>
+<h3>Response</h3>
+<pre><code>HTTP/1.1 <span class="hljs-number">200</span> OK
+<span class="hljs-attribute">Date</span>: Sun, 13 Jun 2021 12:37:45 GMT
+<span class="hljs-attribute">Status</span>: 200 OK
+<span class="hljs-attribute">Connection</span>: keep-alive
+<span class="hljs-attribute">Keep-Alive</span>: timeout=5
+<span class="hljs-attribute">Content-Type</span>: application/json; charset=utf-8
+</code></pre><pre><code class="lang-JSON">  {
+    <span class="hljs-attr">"user"</span>: {
+    <span class="hljs-attr">"age"</span>: <span class="hljs-number">33</span>,
+    <span class="hljs-attr">"_id"</span>: <span class="hljs-string">"606e2bbd04aba95c94aa3192"</span>,
+    <span class="hljs-attr">"name"</span>: <span class="hljs-string">"User"</span>,
+    <span class="hljs-attr">"email"</span>: <span class="hljs-string">"user1@mail.com"</span>,
+    <span class="hljs-attr">"createdAt"</span>: <span class="hljs-string">"2021-04-07T22:01:33.581Z"</span>,
+    <span class="hljs-attr">"updatedAt"</span>: <span class="hljs-string">"2021-06-13T12:37:45.386Z"</span>,
+    <span class="hljs-attr">"__v"</span>: <span class="hljs-number">4</span>
+    },
+    <span class="hljs-attr">"token"</span>: <span class="hljs-string">"eyJhbGciOihIjzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2MDZlMmJiZDA0YWFhOTNjOTRhYTMxOTIiLCJpYXQiOjE2MjM1ODc4NjV9.pz0CP9b-zI3CuZL0osHFUS_oU4JmlT1pXdeLiCdKjjU"</span>
+}
+</code></pre>
+<pre><code>HTTP/1.1 <span class="hljs-number">400</span> Bad Request
+<span class="hljs-attribute">Date</span>: Sun, 13 Jun 2021 20:06:02 GMT
+<span class="hljs-attribute">Status</span>: 400 Bad Request
+<span class="hljs-attribute">Connection</span>: keep-alive
+<span class="hljs-attribute">Content-Type</span>: application/json; charset=utf-8
+</code></pre><pre><code class="lang-JSON">  {
+    <span class="hljs-attr">"message"</span>: <span class="hljs-string">"User authentication failed! Invalid credentials."</span>
+    }
+</code></pre>
+<h3 id="user-signup-request">User signup request</h3>
+<p>`POST /users</p>
+<p>  body:</p>
+<pre><code class="lang-JSON">{
+    <span class="hljs-attr">"name"</span>: <span class="hljs-string">"User1"</span>,
+    <span class="hljs-attr">"email"</span>: <span class="hljs-string">"user1@mail.com"</span>,
+    <span class="hljs-attr">"password"</span>: <span class="hljs-string">"123456789"</span>,
+    <span class="hljs-attr">"age"</span>: <span class="hljs-number">33</span>
+}
+</code></pre>
+<h3>Response</h3>
+<pre><code>HTTP/1.1 <span class="hljs-number">201</span> Created
+<span class="hljs-attribute">Date</span>: Sun, 13 Jun 2021 12:37:45 GMT
+<span class="hljs-attribute">Status</span>: 201 Created
+<span class="hljs-attribute">Connection</span>: keep-alive
+<span class="hljs-attribute">Keep-Alive</span>: timeout=5
+<span class="hljs-attribute">Content-Type</span>: application/json; charset=utf-8
+</code></pre><pre><code class="lang-JSON">  {
+    <span class="hljs-attr">"message"</span>: <span class="hljs-string">"New user created."</span>,
+    <span class="hljs-attr">"user"</span>: {
+    <span class="hljs-attr">"age"</span>: <span class="hljs-number">33</span>,
+    <span class="hljs-attr">"_id"</span>: <span class="hljs-string">"60c667081622a100156fac7c"</span>,
+    <span class="hljs-attr">"name"</span>: <span class="hljs-string">"User1"</span>,
+    <span class="hljs-attr">"email"</span>: <span class="hljs-string">"user1@mail.com"</span>,
+    <span class="hljs-attr">"createdAt"</span>: <span class="hljs-string">"2021-06-13T20:14:00.331Z"</span>,
+    <span class="hljs-attr">"updatedAt"</span>: <span class="hljs-string">"2021-06-13T20:14:00.473Z"</span>,
+    <span class="hljs-attr">"__v"</span>: <span class="hljs-number">1</span>
+},
+    <span class="hljs-attr">"token"</span>: <span class="hljs-string">"eyJgvCsiOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2MGM2NjcwODE2MjJhMTAwMTU2ZmFjN2MiLCJpYXQiOjE2MjM2MTUyNDB9.lErRCRd-MfPj6U9UMsq0Y8ZK9BtjVHseGPqN_x8TMx4"</span>
+}
+</code></pre>
+<pre><code>HTTP/1.1 <span class="hljs-number">400</span> Bad Request
+<span class="hljs-attribute">Date</span>: Sun, 13 Jun 2021 20:06:02 GMT
+<span class="hljs-attribute">Status</span>: 400 Bad Request
+<span class="hljs-attribute">Connection</span>: keep-alive
+<span class="hljs-attribute">Content-Type</span>: application/json; charset=utf-8
+</code></pre><pre><code class="lang-JSON">  {
+    <span class="hljs-string">"message"</span>: <span class="hljs-string">"E11000 duplicate key error collection: task-manager-db.users index: email_1 dup key: { email: \"</span>kikoooooo_@hotmail.com\<span class="hljs-string">" }"</span>
+}
+{
+    <span class="hljs-string">"message"</span>: <span class="hljs-string">"User validation failed: password: Path `password` (`1583`) is shorter than the minimum allowed length (7)."</span>
+}
+</code></pre>
+<h3 id="user-logout-request">User logout request</h3>
+<p>`POST /users/logout</p>
+<h3 >Response</h3>
+<pre><code>HTTP/1.1 <span class="hljs-number">200</span> OK
+<span class="hljs-attribute">Date</span>: Sun, 13 Jun 2021 12:37:45 GMT
+<span class="hljs-attribute">Status</span>: 200 OK
+<span class="hljs-attribute">Connection</span>: keep-alive
+<span class="hljs-attribute">Keep-Alive</span>: timeout=5
+<span class="hljs-attribute">Content-Type</span>: application/json; charset=utf-8
+</code></pre><pre><code class="lang-JSON">{
+    <span class="hljs-attr">"message"</span>: <span class="hljs-string">"User logged out!"</span>
+}
+</code></pre>
+<h3 id="user-logout-from-everywhere">User logout from everywhere</h3>
+<p> `POST /users/logoutall</p>
+<h3 >Response</h3>
+<pre><code>HTTP/1.1 <span class="hljs-number">200</span> OK
+<span class="hljs-attribute">Date</span>: Sun, 13 Jun 2021 12:37:45 GMT
+<span class="hljs-attribute">Status</span>: 200 OK
+<span class="hljs-attribute">Connection</span>: keep-alive
+<span class="hljs-attribute">Keep-Alive</span>: timeout=5
+<span class="hljs-attribute">Content-Type</span>: application/json; charset=utf-8
+</code></pre><pre><code class="lang-JSON">{
+    <span class="hljs-attr">"message"</span>: <span class="hljs-string">"User logged out from all sessions!"</span>
+}
+</code></pre>
+<h3 id="user-profile-image-upload">User profile image upload</h3>
+<p>`POST /users/profile/image</p>
+<p>  body:</p>
+<pre><code class="lang-JSON">{
+    <span class="hljs-attribute">profileImage</span>: profile.jpg
+}
+</code></pre>
+<h3 >Response</h3>
+<pre><code>HTTP/1.1 <span class="hljs-number">200</span> OK
+<span class="hljs-attribute">Date</span>: Sun, 13 Jun 2021 20:31:16 GMT
+<span class="hljs-attribute">Status</span>: 200 OK
+<span class="hljs-attribute">Connection</span>: keep-alive
+<span class="hljs-attribute">Keep-Alive</span>: timeout=5
+<span class="hljs-attribute">Content-Type</span>: application/json; charset=utf-8
+</code></pre><pre><code class="lang-JSON">{
+    <span class="hljs-attr">"message"</span>: <span class="hljs-string">"File uploaded successfully"</span>
+}
+</code></pre>
+<pre><code>HTTP/1.1 <span class="hljs-number">400</span> Bad Request
+<span class="hljs-attribute">Date</span>: Sun, 13 Jun 2021 20:31:16 GMT
+<span class="hljs-attribute">Status</span>: 400 Bad Request
+<span class="hljs-attribute">Connection</span>: keep-alive
+<span class="hljs-attribute">Keep-Alive</span>: timeout=5
+<span class="hljs-attribute">Content-Type</span>: application/json; charset=utf-8
+</code></pre><pre><code class="lang-JSON">{
+    <span class="hljs-attr">"message"</span>: <span class="hljs-string">"User image upload failed. Error: File must be an image."</span>
+}
+</code></pre>
+<h3 id="get-user-profile-data">Get user profile data</h3>
+<p>`GET /users/profile</p>
+<h3 >Response</h3>
+<pre><code>HTTP/1.1 <span class="hljs-number">200</span> OK
+<span class="hljs-attribute">Date</span>: Sun, 13 Jun 2021 20:31:16 GMT
+<span class="hljs-attribute">Status</span>: 200 OK
+<span class="hljs-attribute">Connection</span>: keep-alive
+<span class="hljs-attribute">Keep-Alive</span>: timeout=5
+<span class="hljs-attribute">Content-Type</span>: application/json; charset=utf-8
+</code></pre><pre><code class="lang-JSON">{
+    <span class="hljs-attr">"user"</span>: {
+    <span class="hljs-attr">"age"</span>: <span class="hljs-number">33</span>,
+    <span class="hljs-attr">"_id"</span>: <span class="hljs-string">"606e2bdf44aaa93c94aa3192"</span>,
+    <span class="hljs-attr">"name"</span>: <span class="hljs-string">"User"</span>,
+    <span class="hljs-attr">"email"</span>: <span class="hljs-string">"user1@mail.com"</span>,
+    <span class="hljs-attr">"createdAt"</span>: <span class="hljs-string">"2021-04-07T22:01:33.581Z"</span>,
+    <span class="hljs-attr">"updatedAt"</span>: <span class="hljs-string">"2021-06-13T20:31:16.261Z"</span>,
+    <span class="hljs-attr">"__v"</span>: <span class="hljs-number">4</span>
+    }
+}
+</code></pre>
+<pre><code>HTTP/1.1 <span class="hljs-number">401</span> Unauthorized
+<span class="hljs-attribute">Date</span>: Sun, 13 Jun 2021 20:31:16 GMT
+<span class="hljs-attribute">Status</span>: 401 Unauthorized
+<span class="hljs-attribute">Connection</span>: keep-alive
+<span class="hljs-attribute">Keep-Alive</span>: timeout=5
+<span class="hljs-attribute">Content-Type</span>: application/json; charset=utf-8
+</code></pre><pre><code class="lang-JSON">{
+    <span class="hljs-attr">"message"</span>: <span class="hljs-string">"Unauthorized action!"</span>
+}
+</code></pre>
+<h3 id="get-user-s-profile-image">Get user&#39;s profile image</h3>
+<p>`GET /users/:id/image</p>
+<h3 >Response</h3>
+<pre><code>HTTP/1.1 <span class="hljs-number">200</span> OK
+<span class="hljs-attribute">Date</span>: Sun, 13 Jun 2021 20:31:16 GMT
+<span class="hljs-attribute">Status</span>: 200 OK
+<span class="hljs-attribute">Connection</span>: keep-alive
+<span class="hljs-attribute">Keep-Alive</span>: timeout=5
+<span class="hljs-attribute">Content-Type</span>: application/json; charset=utf-8
+</code></pre><pre><code class="lang-JSON">{
+    <span class="hljs-attr">"message"</span>: <span class="hljs-string">"File uploaded successfully"</span>
+}
+</code></pre>
+<pre><code>HTTP/1.1 <span class="hljs-number">404</span> Not Found
+<span class="hljs-attribute">Date</span>: Sun, 13 Jun 2021 20:31:16 GMT
+<span class="hljs-attribute">Status</span>: 404 Not Found
+<span class="hljs-attribute">Connection</span>: keep-alive
+<span class="hljs-attribute">Keep-Alive</span>: timeout=5
+<span class="hljs-attribute">Content-Type</span>: application/json; charset=utf-8
+</code></pre><pre><code class="lang-JSON">{
+    <span class="hljs-attr">"message"</span>: <span class="hljs-string">"A problem occurred when getting the user's profile image."</span>
+}
+</code></pre>
+<h3 id="patch-user-s-profile-data">Patch user&#39;s profile data</h3>
+<p>`PATCH /users/profile</p>
+<p>body:</p>
+<pre><code class="lang-JSON">{
+    <span class="hljs-attr">"email"</span>: <span class="hljs-string">"user1@mail.com"</span>,
+    <span class="hljs-attr">"age"</span>: <span class="hljs-number">34</span>
+}
+</code></pre>
+<h3 >Response</h3>
+<pre><code>HTTP/1.1 <span class="hljs-number">201</span> Created
+<span class="hljs-attribute">Date</span>: Sun, 13 Jun 2021 20:31:16 GMT
+<span class="hljs-attribute">Status</span>: 201 Created
+<span class="hljs-attribute">Connection</span>: keep-alive
+<span class="hljs-attribute">Keep-Alive</span>: timeout=5
+<span class="hljs-attribute">Content-Type</span>: application/json; charset=utf-8
+</code></pre><pre><code class="lang-JSON">{
+    <span class="hljs-attr">"user"</span>: {
+    <span class="hljs-attr">"age"</span>: <span class="hljs-number">34</span>,
+    <span class="hljs-attr">"_id"</span>: <span class="hljs-string">"603e2bbd04aaa94f94aa3122"</span>,
+    <span class="hljs-attr">"name"</span>: <span class="hljs-string">"User1"</span>,
+    <span class="hljs-attr">"email"</span>: <span class="hljs-string">"user1@mail.com"</span>,
+    <span class="hljs-attr">"createdAt"</span>: <span class="hljs-string">"2021-04-07T22:01:33.581Z"</span>,
+    <span class="hljs-attr">"updatedAt"</span>: <span class="hljs-string">"2021-06-13T20:46:52.653Z"</span>,
+    <span class="hljs-attr">"__v"</span>: <span class="hljs-number">6</span>
+    }
+}
+</code></pre>
+<pre><code>HTTP/1.1 <span class="hljs-number">401</span> Unauthorized
+<span class="hljs-attribute">Date</span>: Sun, 13 Jun 2021 20:31:16 GMT
+<span class="hljs-attribute">Status</span>: 401 Unauthorized
+<span class="hljs-attribute">Connection</span>: keep-alive
+<span class="hljs-attribute">Keep-Alive</span>: timeout=5
+<span class="hljs-attribute">Content-Type</span>: application/json; charset=utf-8
+</code></pre><pre><code class="lang-JSON">{
+    <span class="hljs-attr">"message"</span>: <span class="hljs-string">"Unauthorized action!"</span>
+}
+</code></pre>
+<h3 id="delete-user-profile">Delete user profile</h3>
+<p>`DELETE /users/profile</p>
+<h3 >Response</h3>
+<pre><code>HTTP/1.1 <span class="hljs-number">201</span> Created
+<span class="hljs-attribute">Date</span>: Sun, 13 Jun 2021 20:31:16 GMT
+<span class="hljs-attribute">Status</span>: 201 Created
+<span class="hljs-attribute">Connection</span>: keep-alive
+<span class="hljs-attribute">Keep-Alive</span>: timeout=5
+<span class="hljs-attribute">Content-Type</span>: application/json; charset=utf-8
+</code></pre><pre><code class="lang-JSON">{
+    <span class="hljs-attr">"user"</span>: {
+        <span class="hljs-attr">"age"</span>: <span class="hljs-number">27</span>,
+        <span class="hljs-attr">"_id"</span>: <span class="hljs-string">"606e2bbd04aaa93c94aa3192"</span>,
+        <span class="hljs-attr">"name"</span>: <span class="hljs-string">"User"</span>,
+        <span class="hljs-attr">"email"</span>: <span class="hljs-string">"user1@mail.com"</span>,
+        <span class="hljs-attr">"createdAt"</span>: <span class="hljs-string">"2021-04-07T22:01:33.581Z"</span>,
+        <span class="hljs-attr">"updatedAt"</span>: <span class="hljs-string">"2021-06-13T21:13:10.463Z"</span>,
+        <span class="hljs-attr">"__v"</span>: <span class="hljs-number">8</span>
+    },
+    <span class="hljs-attr">"message"</span>: <span class="hljs-string">"User deleted successfully."</span>
+}
+</code></pre>
+<pre><code>HTTP/1.1 <span class="hljs-number">401</span> Unauthorized
+<span class="hljs-attribute">Date</span>: Sun, 13 Jun 2021 20:31:16 GMT
+<span class="hljs-attribute">Status</span>: 401 Unauthorized
+<span class="hljs-attribute">Connection</span>: keep-alive
+<span class="hljs-attribute">Keep-Alive</span>: timeout=5
+<span class="hljs-attribute">Content-Type</span>: application/json; charset=utf-8
+</code></pre><pre><code class="lang-JSON">{
+    <span class="hljs-attr">"message"</span>: <span class="hljs-string">"Unauthorized action!"</span>
+}
+</code></pre>
+<h3 id="task-routes">Task routes</h3>
+<h3 id="get-all-tasks">Get all tasks</h3>
+<p>`GET /tasks?sortBy=createdAt:desc&amp;sortBy=description:desc&amp;sortBy=completed:asc</p>
+<h3 >Response</h3>
+<pre><code>HTTP/1.1 <span class="hljs-number">200</span> OK
+<span class="hljs-attribute">Date</span>: Sun, 13 Jun 2021 12:37:45 GMT
+<span class="hljs-attribute">Status</span>: 200 OK
+<span class="hljs-attribute">Connection</span>: keep-alive
+<span class="hljs-attribute">Keep-Alive</span>: timeout=5
+<span class="hljs-attribute">Content-Type</span>: application/json; charset=utf-8
+</code></pre><pre><code class="lang-JSON">    {
+    <span class="hljs-attr">"tasks"</span>: [
+    {
+    <span class="hljs-attr">"completed"</span>: <span class="hljs-literal">true</span>,
+    <span class="hljs-attr">"_id"</span>: <span class="hljs-string">"6074s910757de10fb073c499"</span>,
+    <span class="hljs-attr">"description"</span>: <span class="hljs-string">"Feed my cat."</span>,
+    <span class="hljs-attr">"owner"</span>: <span class="hljs-string">"646e2bbd04aaa93c94aa3192"</span>,
+    <span class="hljs-attr">"createdAt"</span>: <span class="hljs-string">"2021-04-16T20:52:48.429Z"</span>,
+    <span class="hljs-attr">"updatedAt"</span>: <span class="hljs-string">"2021-04-16T20:52:48.429Z"</span>,
+    <span class="hljs-attr">"__v"</span>: <span class="hljs-number">0</span>
+    },
+    {
+    <span class="hljs-attr">"completed"</span>: <span class="hljs-literal">true</span>,
+    <span class="hljs-attr">"_id"</span>: <span class="hljs-string">"606f5cba58caec3708bb3940"</span>,
+    <span class="hljs-attr">"description"</span>: <span class="hljs-string">"Trim the trees in my garden."</span>,
+    <span class="hljs-attr">"owner"</span>: <span class="hljs-string">"606e2bbd04aaa93c94aa3192"</span>,
+    <span class="hljs-attr">"createdAt"</span>: <span class="hljs-string">"2021-04-08T19:42:50.361Z"</span>,
+    <span class="hljs-attr">"updatedAt"</span>: <span class="hljs-string">"2021-04-08T19:42:50.361Z"</span>,
+    <span class="hljs-attr">"__v"</span>: <span class="hljs-number">0</span>
+    }
+    ]
+    }
+</code></pre>
+<pre><code>HTTP/1.1 <span class="hljs-number">401</span> Unauthorized
+<span class="hljs-attribute">Date</span>: Sun, 13 Jun 2021 20:31:16 GMT
+<span class="hljs-attribute">Status</span>: 401 Unauthorized
+<span class="hljs-attribute">Connection</span>: keep-alive
+<span class="hljs-attribute">Keep-Alive</span>: timeout=5
+<span class="hljs-attribute">Content-Type</span>: application/json; charset=utf-8
+</code></pre><pre><code class="lang-JSON">{
+    <span class="hljs-attr">"message"</span>: <span class="hljs-string">"Unauthorized action!"</span>
+}
+</code></pre>
+<h3 id="get-single-task-data">Get single task data</h3>
+<p>`GET /tasks/6074s910757de10fb073c499</p>
+<h3 >Response</h3>
+<pre><code>HTTP/1.1 <span class="hljs-number">200</span> OK
+<span class="hljs-attribute">Date</span>: Sun, 13 Jun 2021 20:31:16 GMT
+<span class="hljs-attribute">Status</span>: 200 OK
+<span class="hljs-attribute">Connection</span>: keep-alive
+<span class="hljs-attribute">Keep-Alive</span>: timeout=5
+<span class="hljs-attribute">Content-Type</span>: application/json; charset=utf-8
+</code></pre><pre><code class="lang-JSON">{
+    <span class="hljs-attr">"task"</span>: {
+    <span class="hljs-attr">"completed"</span>: <span class="hljs-literal">true</span>,
+    <span class="hljs-attr">"_id"</span>: <span class="hljs-string">"6074s910757de10fb073c499"</span>,
+    <span class="hljs-attr">"description"</span>: <span class="hljs-string">"Feed my cat."</span>,
+    <span class="hljs-attr">"owner"</span>: <span class="hljs-string">"606e2bbd04aaa93c94aa3192"</span>,
+    <span class="hljs-attr">"createdAt"</span>: <span class="hljs-string">"2021-04-16T20:52:48.429Z"</span>,
+    <span class="hljs-attr">"updatedAt"</span>: <span class="hljs-string">"2021-04-16T20:52:48.429Z"</span>,
+    <span class="hljs-attr">"__v"</span>: <span class="hljs-number">0</span>
+    }
+}
+</code></pre>
+<pre><code>HTTP/1.1 <span class="hljs-number">401</span> Unauthorized
+<span class="hljs-attribute">Date</span>: Sun, 13 Jun 2021 20:31:16 GMT
+<span class="hljs-attribute">Status</span>: 401 Unauthorized
+<span class="hljs-attribute">Connection</span>: keep-alive
+<span class="hljs-attribute">Keep-Alive</span>: timeout=5
+<span class="hljs-attribute">Content-Type</span>: application/json; charset=utf-8
+</code></pre><pre><code class="lang-JSON">{
+    <span class="hljs-attr">"message"</span>: <span class="hljs-string">"Unauthorized action!"</span>
+}
+</code></pre>
+<h3 id="create-new-task">Create new task</h3>
+<p>`POST /tasks</p>
+<p>body:</p>
+<pre><code class="lang-JSON">{
+    <span class="hljs-attr">"description"</span>: <span class="hljs-string">"Create github readme file for this API."</span>,
+    <span class="hljs-attr">"completed"</span>: <span class="hljs-literal">false</span>
+}
+</code></pre>
+<h3 >Response</h3>
+<pre><code>HTTP/1.1 <span class="hljs-number">201</span> Created
+<span class="hljs-attribute">Date</span>: Sun, 13 Jun 2021 20:31:16 GMT
+<span class="hljs-attribute">Status</span>: 201 Created
+<span class="hljs-attribute">Connection</span>: keep-alive
+<span class="hljs-attribute">Keep-Alive</span>: timeout=5
+<span class="hljs-attribute">Content-Type</span>: application/json; charset=utf-8
+</code></pre><pre><code class="lang-JSON">{
+    <span class="hljs-attr">"task"</span>: {
+    <span class="hljs-attr">"completed"</span>: <span class="hljs-literal">false</span>,
+    <span class="hljs-attr">"_id"</span>: <span class="hljs-string">"60c677c68fe1352ce478cdb7"</span>,
+    <span class="hljs-attr">"description"</span>: <span class="hljs-string">"Create github readme file for this API."</span>,
+    <span class="hljs-attr">"owner"</span>: <span class="hljs-string">"607889c0daef831f58d0ed98"</span>,
+    <span class="hljs-attr">"createdAt"</span>: <span class="hljs-string">"2021-06-13T21:25:26.106Z"</span>,
+    <span class="hljs-attr">"updatedAt"</span>: <span class="hljs-string">"2021-06-13T21:25:26.106Z"</span>,
+    <span class="hljs-attr">"__v"</span>: <span class="hljs-number">0</span>
+    },
+    <span class="hljs-attr">"message"</span>: <span class="hljs-string">"New task saved successfully."</span>
+}
+</code></pre>
+<h3 id="update-task-data">Update task data</h3>
+<p>`PATCH /tasks/:id</p>
+<p>body:</p>
+<pre><code class="lang-JSON">{
+    <span class="hljs-attr">"completed"</span>: <span class="hljs-string">"true"</span>
+}
+</code></pre>
+<h3 >Response</h3>
+<pre><code>HTTP/1.1 <span class="hljs-number">201</span> Created
+<span class="hljs-attribute">Date</span>: Sun, 13 Jun 2021 20:31:16 GMT
+<span class="hljs-attribute">Status</span>: 201 Created
+<span class="hljs-attribute">Connection</span>: keep-alive
+<span class="hljs-attribute">Keep-Alive</span>: timeout=5
+<span class="hljs-attribute">Content-Type</span>: application/json; charset=utf-8
+</code></pre><pre><code class="lang-JSON">    <span class="hljs-string">"newTask"</span>: {
+    <span class="hljs-string">"completed"</span>: <span class="hljs-literal">true</span>,
+    <span class="hljs-string">"_id"</span>: <span class="hljs-string">"60c677c68fe1352ce478cdb7"</span>,
+    <span class="hljs-string">"description"</span>: <span class="hljs-string">"Create github readme file for this API."</span>,
+    <span class="hljs-string">"owner"</span>: <span class="hljs-string">"607889c0daef831f58d0ed98"</span>,
+    <span class="hljs-string">"createdAt"</span>: <span class="hljs-string">"2021-06-13T21:25:26.106Z"</span>,
+    <span class="hljs-string">"updatedAt"</span>: <span class="hljs-string">"2021-06-13T21:28:28.860Z"</span>,
+    <span class="hljs-string">"__v"</span>: <span class="hljs-number">0</span>
+    }
+</code></pre>
+<h3 id="delete-task">Delete task</h3>
+<p>`DELETE /tasks/:id</p>
+<h3 >Response</h3>
+<pre><code>HTTP/1.1 <span class="hljs-number">201</span> Created
+<span class="hljs-attribute">Date</span>: Sun, 13 Jun 2021 20:31:16 GMT
+<span class="hljs-attribute">Status</span>: 201 Created
+<span class="hljs-attribute">Connection</span>: keep-alive
+<span class="hljs-attribute">Keep-Alive</span>: timeout=5
+<span class="hljs-attribute">Content-Type</span>: application/json; charset=utf-8
+</code></pre><pre><code class="lang-JSON">    <span class="hljs-string">"deletedTask"</span>: {
+    <span class="hljs-string">"completed"</span>: <span class="hljs-literal">true</span>,
+    <span class="hljs-string">"_id"</span>: <span class="hljs-string">"60c677c68fe1352ce478cdb7"</span>,
+    <span class="hljs-string">"description"</span>: <span class="hljs-string">"Create github readme file for this API."</span>,
+    <span class="hljs-string">"owner"</span>: <span class="hljs-string">"607889c0daef831f58d0ed98"</span>,
+    <span class="hljs-string">"createdAt"</span>: <span class="hljs-string">"2021-06-13T21:25:26.106Z"</span>,
+    <span class="hljs-string">"updatedAt"</span>: <span class="hljs-string">"2021-06-13T21:28:28.860Z"</span>,
+    <span class="hljs-string">"__v"</span>: <span class="hljs-number">0</span>
+    },
+    <span class="hljs-string">"message"</span>: <span class="hljs-string">"Task deleted successfully."</span>
+</code></pre>
+<pre><code>HTTP/1.1 <span class="hljs-number">401</span> Unauthorized
+<span class="hljs-attribute">Date</span>: Sun, 13 Jun 2021 20:31:16 GMT
+<span class="hljs-attribute">Status</span>: 401 Unauthorized
+<span class="hljs-attribute">Connection</span>: keep-alive
+<span class="hljs-attribute">Keep-Alive</span>: timeout=5
+<span class="hljs-attribute">Content-Type</span>: application/json; charset=utf-8
+</code></pre><pre><code class="lang-JSON">{
+    <span class="hljs-attr">"message"</span>: <span class="hljs-string">"Unauthorized action!"</span>
+}
+</code></pre>
+<!-- CONTACT -->
+<h2 id="contact">Contact</h2>
+<p>Kristijan Pavlevski - kristijan.pavlevski@outlook.com</p>
+<p>Project Link: <a href="https://github.com/kikooOOoo16/task-manager-node-api">https://github.com/kikooOOoo16/task-manager-node-api</a></p>

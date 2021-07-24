@@ -14,7 +14,7 @@ router.post('', auth, async (req, res, next) => {
     });
 
     try {
-        await task.save()
+        await task.save();
         res.status(201).json({
             task,
             message: 'New task saved successfully.'
